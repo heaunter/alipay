@@ -12,15 +12,17 @@ public enum SignType {
 
     DSA("DSA"),
 
-    RSA("RSA");
+    RSA("RSA"),
+
+    RSA2("RSA2");
 
     private String value;
 
-    private SignType(String value){
+    private SignType(String value) {
         this.value = value;
     }
 
-    public String value(){
+    public String value() {
         return value;
     }
 }

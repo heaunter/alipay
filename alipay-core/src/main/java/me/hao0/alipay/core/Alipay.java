@@ -3,6 +3,7 @@ package me.hao0.alipay.core;
 import me.hao0.alipay.model.enums.AlipayField;
 import me.hao0.alipay.model.enums.PayMethod;
 import me.hao0.alipay.model.enums.PaymentType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +24,9 @@ public final class Alipay {
      * 签约的支付宝账号对应的支付宝唯一用户号，以2088开头的16位纯数字组成。
      */
     String merchantId;
+
+    /** 支付宝应用ID */
+    String appId;
 
     /**
      * 商户密钥
@@ -86,7 +90,7 @@ public final class Alipay {
 
     Map<String, Component> components = new HashMap<>();
 
-    Alipay(String merchantId, String secret){
+    Alipay(String merchantId, String secret) {
         this.merchantId = merchantId;
         this.secret = secret;
     }
@@ -99,6 +103,7 @@ public final class Alipay {
 
     private void initConfig() {
         payConfig = new HashMap<>();
+        payConfig.put(AlipayField.APP_ID.field(), appId);
         payConfig.put(AlipayField.PARTNER.field(), merchantId);
         payConfig.put(AlipayField.SELLER_ID.field(), merchantId);
         payConfig.put(AlipayField.PAYMENT_TYPE.field(), paymentType);
@@ -118,16 +123,16 @@ public final class Alipay {
         components.put(Verifies.class.getSimpleName(), new Verifies(this));
     }
 
-    public Pays pay(){
-        return (Pays)components.get(Pays.class.getSimpleName());
+    public Pays pay() {
+        return (Pays) components.get(Pays.class.getSimpleName());
     }
 
-    public Refunds refund(){
-        return (Refunds)components.get(Refunds.class.getSimpleName());
+    public Refunds refund() {
+        return (Refunds) components.get(Refunds.class.getSimpleName());
     }
 
-    public Verifies verify(){
-        return (Verifies)components.get(Verifies.class.getSimpleName());
+    public Verifies verify() {
+        return (Verifies) components.get(Verifies.class.getSimpleName());
     }
 
     @Override
