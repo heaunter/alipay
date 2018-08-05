@@ -10,10 +10,12 @@ import me.hao0.common.exception.XmlException;
 import me.hao0.common.http.Http;
 import me.hao0.common.util.Strings;
 import me.hao0.common.xml.XmlReaders;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static me.hao0.common.util.Preconditions.*;
+
+import static me.hao0.common.util.Preconditions.checkNotNullAndEmpty;
 
 /**
  * 退款组件
@@ -23,28 +25,30 @@ import static me.hao0.common.util.Preconditions.*;
  */
 public class Refunds extends Component {
 
-    Refunds(Alipay alipay){
+    Refunds(Alipay alipay) {
         super(alipay);
     }
 
     /**
      * 发起退款请求
+     *
      * @param refundDetail 退款明细
      * @return 退款是否提交成功(不表示实际退款是否, 需从支付宝退款通知中来确认)
      */
-    public Boolean refund(RefundDetail refundDetail){
+    public Boolean refund(RefundDetail refundDetail) {
         try {
             String url = Alipay.GATEWAY + "_input_charset=" + alipay.inputCharset;
             Map<String, String> refundParams = buildRefundParams(refundDetail);
             String resp = Http.get(url).params(refundParams).request();
+            System.out.println("alipay refund, response:" + resp);
             XmlReaders reader = XmlReaders.create(resp);
             String isSuccess = reader.getNodeStr("is_success");
-            if ("T".equals(isSuccess)){
+            if ("T".equals(isSuccess)) {
                 return Boolean.TRUE;
             }
-        } catch (XmlException e){
+        } catch (XmlException e) {
             // ignore xml parse error
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new AliPayException(e);
         }
         return Boolean.FALSE;
@@ -60,12 +64,12 @@ public class Refunds extends Component {
         // 接口名
         refundParams.put(AlipayField.SERVICE.field(), Service.REFUND_NO_PWD.value());
 
-        if (!Strings.isNullOrEmpty(alipay.email)){
+        if (!Strings.isNullOrEmpty(alipay.email)) {
             refundParams.put(AlipayField.SELLER_EMAIL.field(), alipay.email);
         }
 
         // 通知URL
-        if (!Strings.isNullOrEmpty(refundDetail.getNotifyUrl())){
+        if (!Strings.isNullOrEmpty(refundDetail.getNotifyUrl())) {
             refundParams.put(AlipayField.NOTIFY_URL.field(), refundDetail.getNotifyUrl());
         }
 

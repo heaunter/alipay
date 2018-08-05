@@ -72,6 +72,10 @@ public class AlipayService {
         return alipay.verify().md5(params);
     }
 
+    public Boolean notifyVerifyRsa(Map<String, String> params) {
+        return alipay.verify().rsa(params);
+    }
+
     /**
      * 退款申请
      */
